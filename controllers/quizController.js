@@ -10,13 +10,22 @@ exports.startQuiz= function(req,res){
     userModel.findById(req.params.iduser).exec()
     .then(async (employee)=>{
         const quiz = await quizModel.findById(req.params.idquiz);
-        employee.scores.push({quiz:quiz._id,score:0});
+        if(employee.scores.findIndex(score=>{
+            return score.quiz == req.params.idquiz
+        })==-1 )
+        
+        {employee.scores.push({quiz:quiz._id,score:0,questionsAnswered:null});
         employee.save().then(employeeSaved=>{
             if(employeeSaved)
             {
                 return res.status(200).json("well done you have started the quiz");
             }
         })
+    }
+    else {
+        return res.status(403).json("you  have done this quiz ! you cannot repeat ");
+
+    }
     })
     .catch(err=>{
         return res.status(500).json(err);
@@ -111,5 +120,23 @@ exports.update = function(req,res){
     .catch(err=>{
         return res.status(500).json(err);
 
+    })
+}
+
+exports.getQuizScore=function(req,res){
+    userModel.findById(req.params.iduser)
+    .exec()
+    .then(employee=>{
+        if(employee){
+           return res.send(employee.scores[employee.scores.findIndex(score=>{
+                return score.quiz==req.params.idquiz
+            })])
+        }
+        else {
+            return res.status(404).json({message:'employee not found'})
+        }
+    })
+    .catch(err=>{
+        return res.status(500).json(err)
     })
 }

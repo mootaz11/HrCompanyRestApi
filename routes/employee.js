@@ -19,5 +19,4 @@ route.post("/update",employeeController.updateInfo);
 route.get("/getEmployee/:id",employeeController.getEmployee);
 route.get("/getAll",employeeController.getEmployees);
 route.delete("/delete/:id",employeeController.deleteEmployee);
-
 module.exports = route;

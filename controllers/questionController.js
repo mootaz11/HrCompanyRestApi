@@ -22,7 +22,7 @@ exports.getAll = function(req,res){
 }
 
 exports.getQuestionsByquiz = function(req,res){
-    questionModel.find({quiz:req.params.idquizd})
+    questionModel.find({quiz:req.params.idquiz})
     .exec()
     .then(questions=>{
         if(questions.length>0){
@@ -50,7 +50,7 @@ exports.getQuestion = function(req,res){
     })
     .catch(err=>{
         return res.status(500).json(err);
-    })
+    })  
 }
 
 
@@ -82,7 +82,7 @@ exports.create =async function(req,res){
 }
 
 exports.answerQuestion=function(req,res){
-    questionModel.findOne({quiz:req.params.idquiz})
+    questionModel.findById(req.params.idquestion)
     .exec()
     .then( async question=>{
         if(question){
@@ -91,7 +91,6 @@ exports.answerQuestion=function(req,res){
                  const employee= await userModel.findById(req.params.iduser);
                  employee.scores.map(score=>{
                     if(score.quiz==question.quiz){
-                        
                         if(score.questionsAnswered !=null){
                             if(score.questionsAnswered.indexOf(question._id)!=-1)
                             {

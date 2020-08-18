@@ -9,10 +9,6 @@ route.get("/getQuestion/:idquestion",questionController.getQuestion);
 route.get("/getAll",questionController.getAll);
 route.get("/getquestionsByquiz/:idquiz",questionController.getQuestionsByquiz)
 route.delete("/delete/:id",questionController.deleteQuestion);
-route.post("/answerQuestion/:iduser/:idquiz",questionController.answerQuestion);
-
-
-
-
+route.post("/answerQuestion/:iduser/:idquestion",questionController.answerQuestion);
 
 module.exports=route;

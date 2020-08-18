@@ -4,9 +4,25 @@ const morgan = require("morgan");
 const cors = require("cors");
 const  BodyParser = require("body-parser");
 
+const WebSocket = require('ws')
+const wss = new WebSocket.Server({port:3030});
+
+wss.on('connection', function connection(ws) {
+  console.log("connection done");
+  ws.on('message', data => {
+      const _data = JSON.parse(data);
+      if(ws.readyState)
+      console.log(_data);
+      wss.clients.forEach(function each(client) {
+        if (client !== ws && client.readyState === WebSocket.OPEN) 
+        {   
+           client.send(data);
+        }
+      })
+  })
+})
+
 const app = express();
-
-
 const uri ="mongodb://localhost:27017/hrcompany";
 mongoose.connect(uri,{ useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true });
 
@@ -37,3 +53,4 @@ app.use("/question",questionRoute);
 app.listen(3000,()=>{
     console.log("server is listenning on 3000")
 })
+
